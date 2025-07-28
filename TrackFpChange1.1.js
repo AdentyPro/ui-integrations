@@ -68,7 +68,7 @@ setTimeout(async () => {
       // name: 'VisitorFPChanged', 
       // eventArguments: JSON.stringify({[fpName]: fpData})
     // });
-    window.adenty.event.fireEvent({ 
+    window.adenty.event.fireevent({ 
       name: 'VisitorFPCountChanged',
       eventArguments: JSON.stringify({[fpPVCountName]: sCookiefpPVCountVal, [fpName]: fpData})
     });

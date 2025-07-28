@@ -67,7 +67,7 @@ setTimeout(async () => {
       // name: 'VisitorCookieChanged', 
       // eventArguments: JSON.stringify({[ckName]: shortToken})
     // });
-    window.adenty.event.fireEvent({
+    window.adenty.event.fireevent({
       name: 'VisitorCookiePVCountChanged', 
       eventArguments: JSON.stringify({[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken})
     });

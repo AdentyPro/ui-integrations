@@ -94,7 +94,7 @@ trc("uaChanged="+(ipUa.ua !== browserData))
       // name: 'VisitorIpUaChanged', 
       // eventArguments: JSON.stringify({[ipUaName]: ipUaData})
     // });
-    window.adenty.event.fireEvent({
+    window.adenty.event.fireevent({
       name: 'VisitorIpUaCountChanged',
       eventArguments: JSON.stringify({[ipUaCountName]: sCookieIpuaPVCountVal, [ipUaName]: ipUaData})
     });
