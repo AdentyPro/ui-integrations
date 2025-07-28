@@ -63,7 +63,7 @@ setTimeout(async () => {
   if (!ck) {
     newCkPVCount = 1;
 	sCookieCkPVCountVal = (sCookieCkPVCountVal ? sCookieCkPVCountVal : 0)  //TODO check when SQL querying whether we have 0 in events, this is not expected
-    // window.adenty.event.fireEvent({
+    // window.adenty.event.fireevent({
       // name: 'VisitorCookieChanged', 
       // eventArguments: JSON.stringify({[ckName]: shortToken})
     // });

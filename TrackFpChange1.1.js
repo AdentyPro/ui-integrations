@@ -64,7 +64,7 @@ setTimeout(async () => {
   if (fp !== fpData) {
     newfpPVCount = 1;
 	sCookiefpPVCountVal = (sCookiefpPVCountVal ? sCookiefpPVCountVal: 0) //TODO check when SQL querying whether we have 0 in events, this is not expected
-    // window.adenty.event.fireEvent({
+    // window.adenty.event.fireevent({
       // name: 'VisitorFPChanged', 
       // eventArguments: JSON.stringify({[fpName]: fpData})
     // });
