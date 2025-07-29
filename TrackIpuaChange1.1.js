@@ -92,11 +92,11 @@ trc("uaChanged="+(ipUa.ua !== browserData))
 	sCookieIpuaPVCountVal = (sCookieIpuaPVCountVal ? sCookieIpuaPVCountVal: 0) //TODO check when SQL querying whether we have 0 in events, this is not expected
     // window.adenty.event.fireevent({
       // name: 'VisitorIpUaChanged', 
-      // eventArguments: JSON.stringify({[ipUaName]: ipUaData})
+      // eventarguments: JSON.stringify({[ipUaName]: ipUaData})
     // });
     window.adenty.event.fireevent({
       name: 'VisitorIpUaCountChanged',
-      eventArguments: JSON.stringify({[ipUaCountName]: sCookieIpuaPVCountVal, [ipUaName]: ipUaData})
+      eventarguments: JSON.stringify({[ipUaCountName]: sCookieIpuaPVCountVal, [ipUaName]: ipUaData})
     });
 
     window.adenty.scookie.set({

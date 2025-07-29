@@ -65,11 +65,11 @@ setTimeout(async () => {
 	sCookieCkPVCountVal = (sCookieCkPVCountVal ? sCookieCkPVCountVal : 0)  //TODO check when SQL querying whether we have 0 in events, this is not expected
     // window.adenty.event.fireevent({
       // name: 'VisitorCookieChanged', 
-      // eventArguments: JSON.stringify({[ckName]: shortToken})
+      // eventarguments: JSON.stringify({[ckName]: shortToken})
     // });
     window.adenty.event.fireevent({
       name: 'VisitorCookiePVCountChanged', 
-      eventArguments: JSON.stringify({[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken})
+      eventarguments: JSON.stringify({[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken})
     });
 
     document.cookie = `${cGUID}=${shortToken}; expires=${date.toUTCString()};`;
