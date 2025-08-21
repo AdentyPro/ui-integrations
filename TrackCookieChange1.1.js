@@ -22,6 +22,7 @@ setTimeout(async () => {
   if (window.aidpSCookieListPromise) {
     trc('Promise exist. wait. cookie change js');
     window.aidpSCookieListPromise.then(useData).catch(console.error);
+    return;
   }
 
   let resolveFn, rejectFn;
