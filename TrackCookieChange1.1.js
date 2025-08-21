@@ -1,5 +1,12 @@
 //CookieIdChanged + CookieePVCountChanged
 setTimeout(async () => {
+  const traceNow = true;
+
+  function trc(message) {
+    if (traceNow) {
+      console.trace(message);
+    }
+  }
 
   const cGUID = 'aidp_tt_cookieId';
   const ckCountName = 'aidp_tt_ckPVCount'; 
@@ -13,27 +20,33 @@ setTimeout(async () => {
   let sCookieCkPVCountVal;
 
   if (window.aidpSCookieListPromise) {
+    trc('Promise exist. wait. cookie change js');
     window.aidpSCookieListPromise.then(useData).catch(console.error);
   }
 
   let resolveFn, rejectFn;
+  trc('Promise init. cookie change js');
   window.aidpSCookieListPromise = new Promise((resolve, reject) => {
     resolveFn = resolve;
     rejectFn = reject;
   });
 
   if (window.aidpSCookieList) {
+    trc('window global cookie exist. cookie change js');
     resolveFn(window.aidpSCookieList);
   } else {
     window.adenty?.scookie?.get()
     .then(data => {
+      trc('Promise resolve success. cookie change js');
       resolveFn(data);
     })
     .catch(error => {
+      trc('Promise resolve error. cookie change js');
       resolveFn([]);
     });
   }
  
+  trc('Promise wait. cookie change js');
   window.aidpSCookieListPromise.then(useData).catch(console.error);
 
   function useData(data) {
