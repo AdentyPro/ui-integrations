@@ -1,6 +1,6 @@
 //FpChanged + fpPVCountChanged
 setTimeout(async () => {
-  const traceNow = true;
+  const traceNow = false;
 
   function trc(message) {
     if (traceNow) {
@@ -35,7 +35,7 @@ setTimeout(async () => {
   });
 
   if (window.aidpSCookieList) {
-    trc('window global cookie exist. fp change js');
+    trc('window global cookie exist. fp change js ');
     resolveFn(window.aidpSCookieList);
   } else {
     window.adenty?.scookie?.get()

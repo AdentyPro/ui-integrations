@@ -1,6 +1,6 @@
 //CookieIdChanged + CookieePVCountChanged
 setTimeout(async () => {
-  const traceNow = true;
+  const traceNow = false;
 
   function trc(message) {
     if (traceNow) {
@@ -20,7 +20,7 @@ setTimeout(async () => {
   let sCookieCkPVCountVal;
 
   if (window.aidpSCookieListPromise) {
-    trc('Promise exist. wait. cookie change js');
+    trc('Promise exist. wait. cookie change js ');
     window.aidpSCookieListPromise.then(useData).catch(console.error);
     return;
   }
