@@ -1,4 +1,4 @@
-//CookieIdChanged + CookieePVCountChanged
+//Common
 setTimeout(async () => {
     const traceNow = false;
 
