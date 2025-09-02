@@ -1,13 +1,12 @@
 /**
- * Расширенный детектор AdBlocker
- * Включает методы для обнаружения различных типов блокировщиков рекламы
+ * AdBlocker detector
  */
 
 class AdvancedAdBlockerDetector {
     constructor(options = {}) {
         this.options = {
             timeout: options.timeout || 3000,
-            threshold: options.threshold || 1, // Минимальное количество положительных тестов
+            threshold: options.threshold || 1, // Minimum amount of positive tests
             debug: options.debug || false,
             ...options
         };
@@ -27,11 +26,11 @@ class AdvancedAdBlockerDetector {
     }
 
     /**
-     * Запуск всех тестов
+     * Launch all tests
      */
     async detect() {
         if (this.options.debug) {
-            console.log('🚀 Запуск детектора AdBlocker...');
+            console.log('🚀 Launch AdBlocker...');
         }
 
         const tests = [
@@ -40,10 +39,9 @@ class AdvancedAdBlockerDetector {
             this.testHtml()
         ];
 
-        // Ждем завершения всех тестов
+        // Wait finishing all tests
         await Promise.allSettled(tests);
         
-        // Даем дополнительное время для завершения асинхронных операций
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         this.evaluateResults();
@@ -51,11 +49,11 @@ class AdvancedAdBlockerDetector {
     }
 
     /**
-     * Тест 1: Подозрительная картинка
+     * Test 1: suspicious image
      */
     async testImage() {
         return new Promise((resolve) => {
-            // Используем реальные домены, которые часто блокируются uBlock
+            // use real domains that ofter are blocked
             const suspiciousDomains = [
                 'https://dc740.4shared.com/img/zYnDpTnt/s23/11bf951e698/Ad_online',
                 'https://img.freepik.com/free-photo/sassy-goodlooking-redhead-female-yellow-sweater-listen-music-white-headphones-touch-earphones_1258-126219.jpg',
@@ -76,7 +74,7 @@ class AdvancedAdBlockerDetector {
                     const loadTime = Date.now() - startTime;
                     loaded = true;
                     if (this.options.debug) {
-                        console.log('✅ Картинка загружена за', loadTime, 'мс:', testUrl);
+                        console.log('✅ Image was downloaded for', loadTime, 'ms:', testUrl);
                     }
                     completedImages++;
                     this.checkImageCompletion();
@@ -84,7 +82,7 @@ class AdvancedAdBlockerDetector {
                 
                 img.onerror = () => {
                     if (this.options.debug) {
-                        console.log('❌ Картинка заблокирована:', testUrl);
+                        console.log('❌ Image was blocked:', testUrl);
                     }
                     blockedCount++;
                     completedImages++;
@@ -93,11 +91,11 @@ class AdvancedAdBlockerDetector {
                 
                 img.src = testUrl;
                 
-                // Таймаут для каждой картинки
+                // Timeout for every image
                 setTimeout(() => {
                     if (!loaded) {
                         if (this.options.debug) {
-                            console.log('⏰ Таймаут для картинки:', testUrl);
+                            console.log('⏰ Timeout for image:', testUrl);
                         }
                         blockedCount++;
                     }
@@ -106,14 +104,14 @@ class AdvancedAdBlockerDetector {
                 }, this.options.timeout);
             });
             
-            // Функция для проверки завершения всех тестов
+            // Function for checking finish of all tests
             this.checkImageCompletion = () => {
                 if (completedImages === totalImages) {
-                    // Если заблокировано больше половины картинок, считаем что adblocker обнаружен
+                    // If at least one image was blocked it is positive case
                     this.results.image = blockedCount > 0;
                     
                     if (this.options.debug) {
-                        console.log(`📊 Картинки: ${blockedCount}/${totalImages} заблокировано`);
+                        console.log(`📊 Images: ${blockedCount}/${totalImages} blocked`);
                     }
                     
                     resolve();
@@ -123,11 +121,11 @@ class AdvancedAdBlockerDetector {
     }
 
     /**
-     * Тест 2: Скрипт ad.js
+     * Test 2: ad.js script
      */
     async testScript() {
         return new Promise((resolve) => {
-            // Используем реальные источники, которые часто блокируются uBlock
+            // Use real sources that are often blocked by uBlock
             const adScriptSources = [
                 'https://www.googleadservices.com/pagead/conversion.js',
                 'https://connect.facebook.net/en_US/fbevents.js',
@@ -148,7 +146,7 @@ class AdvancedAdBlockerDetector {
                 script.onload = () => {
                     loaded = true;
                     if (this.options.debug) {
-                        console.log('✅ Скрипт загружен:', source);
+                        console.log('✅ Script loaded:', source);
                     }
                     completedScripts++;
                     this.checkScriptCompletion();
@@ -156,7 +154,7 @@ class AdvancedAdBlockerDetector {
                 
                 script.onerror = () => {
                     if (this.options.debug) {
-                        console.log('❌ Скрипт заблокирован:', source);
+                        console.log('❌ Script blocked:', source);
                     }
                     blockedCount++;
                     completedScripts++;
@@ -165,32 +163,32 @@ class AdvancedAdBlockerDetector {
                 
                 document.head.appendChild(script);
                 
-                // Таймаут для каждого скрипта
+                // Timeout for each script
                 setTimeout(() => {
                     if (!loaded) {
                         if (this.options.debug) {
-                            console.log('⏰ Таймаут для скрипта:', source);
+                            console.log('⏰ Timeout for script:', source);
                         }
                         blockedCount++;
                     }
                     completedScripts++;
                     this.checkScriptCompletion();
                     
-                    // Удаляем скрипт
+                    // Remove the script
                     if (script.parentNode) {
                         script.parentNode.removeChild(script);
                     }
                 }, this.options.timeout);
             });
             
-            // Функция для проверки завершения всех тестов
+            // Function to check completion of all tests
             this.checkScriptCompletion = () => {
                 if (completedScripts === totalScripts) {
-                    // Если заблокировано больше половины скриптов, считаем что adblocker обнаружен
+                    // If more than half of scripts are blocked, consider adblocker detected
                     this.results.script = blockedCount > 0;
                     
                     if (this.options.debug) {
-                        console.log(`📊 Скрипты: ${blockedCount}/${totalScripts} заблокировано`);
+                        console.log(`📊 Scripts: ${blockedCount}/${totalScripts} blocked`);
                     }
                     
                     resolve();
@@ -200,10 +198,10 @@ class AdvancedAdBlockerDetector {
     }
 
     /**
-     * Тест 3: HTML элементы с признаками рекламы
+     * Test 3: HTML elements with signs of advertising
      */
     testHtml() {
-        // Создаем временные элементы для тестирования с явными признаками рекламы
+        // Create temporary elements for testing with explicit signs of advertising
         const testElements = [
             { tag: 'div', className: 'ad-banner', text: '🔥 HOT DEALS! 🔥 CLICK HERE NOW! 🔥 LIMITED TIME OFFER! 🔥' },
             { tag: 'div', className: 'sponsored-content', text: '⭐ SPONSORED CONTENT ⭐ BUY NOW! ⭐ SPECIAL PRICE! ⭐' },
@@ -231,7 +229,7 @@ class AdvancedAdBlockerDetector {
             if (src) element.src = src;
             if (text) element.textContent = text;
             
-            // Добавляем стили, которые делают элемент более "рекламным"
+            // Add styles that make the element more "ad-like"
             element.style.position = 'absolute';
             element.style.left = '-9999px';
             element.style.top = '-9999px';
@@ -247,14 +245,14 @@ class AdvancedAdBlockerDetector {
             element.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
             element.style.zIndex = '9999';
             
-            // Добавляем атрибуты, которые часто блокируются
+            // Add attributes that are often blocked
             element.setAttribute('data-ad', 'true');
             element.setAttribute('data-advertisement', 'true');
             element.setAttribute('data-sponsored', 'true');
             
             document.body.appendChild(element);
             
-            // Проверяем, скрыт ли элемент
+            // Check if the element is hidden
             const style = window.getComputedStyle(element);
             if (style.display === 'none' || 
                 style.visibility === 'hidden' || 
@@ -266,21 +264,19 @@ class AdvancedAdBlockerDetector {
                 hiddenCount++;
             }
             
-            // Удаляем элемент
+            // Remove the element
             document.body.removeChild(element);
         });
         
         this.results.html = hiddenCount > 0;
         
         if (this.options.debug) {
-            console.log(this.results.html ? '❌ HTML элементы заблокированы' : '✅ HTML элементы видны');
+            console.log(this.results.html ? '❌ HTML elements blocked' : '✅ HTML elements visible');
         }
     }
 
-    
-
     /**
-     * Оценка результатов
+     * Evaluate results
      */
     evaluateResults() {
         const positiveTests = Object.values(this.results).filter(result => result).length;
@@ -288,12 +284,12 @@ class AdvancedAdBlockerDetector {
         this.adBlockerDetected = positiveTests >= this.options.threshold;
         
         if (this.options.debug) {
-            console.log('📊 Результаты тестов:', this.results);
-            console.log('🎯 Положительных тестов:', positiveTests);
-            console.log('🚫 AdBlocker обнаружен:', this.adBlockerDetected);
+            console.log('📊 Test results:', this.results);
+            console.log('🎯 Positive tests:', positiveTests);
+            console.log('🚫 AdBlocker detected:', this.adBlockerDetected);
         }
         
-        // Вызываем колбэки
+        // Invoke callbacks
         if (this.adBlockerDetected) {
             this.callbacks.onDetected(this.results);
         } else {
@@ -304,7 +300,7 @@ class AdvancedAdBlockerDetector {
     }
 
     /**
-     * Получить детальные результаты
+     * Get detailed results
      */
     getResults() {
         return {
@@ -316,12 +312,12 @@ class AdvancedAdBlockerDetector {
     }
 }
 
-// Экспорт для использования в браузере
+// Export for browser usage
 if (typeof window !== 'undefined') {
     window.AdvancedAdBlockerDetector = AdvancedAdBlockerDetector;
 }
 
-// Экспорт для Node.js
+// Export for Node.js
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = AdvancedAdBlockerDetector;
 } 
