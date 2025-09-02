@@ -16,6 +16,9 @@ class AdvancedAdBlockerDetector {
             script: false,
             html: false
         };
+
+        this.start = 0;
+        this.finish = 0;
         
         this.adBlockerDetected = false;
         this.callbacks = {
@@ -30,6 +33,7 @@ class AdvancedAdBlockerDetector {
      */
     async detect() {
         if (this.options.debug) {
+            this.start = performance.now();
             console.log('🚀 Launch AdBlocker...');
         }
 
@@ -45,6 +49,10 @@ class AdvancedAdBlockerDetector {
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         this.evaluateResults();
+        if (this.options.debug) {
+            this.finish = performance.now();
+            console.log('Time of detecting: ', this.finish - this.start);
+        }
         return this.adBlockerDetected;
     }
 
