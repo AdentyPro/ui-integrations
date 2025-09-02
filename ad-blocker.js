@@ -55,9 +55,9 @@ class AdvancedAdBlockerDetector {
         return new Promise((resolve) => {
             // use real domains that ofter are blocked
             const suspiciousDomains = [
-                'https://dc740.4shared.com/img/zYnDpTnt/s23/11bf951e698/Ad_online',
-                'https://img.freepik.com/free-photo/sassy-goodlooking-redhead-female-yellow-sweater-listen-music-white-headphones-touch-earphones_1258-126219.jpg',
-                'https://mitup.ru/assets/img/partners/ya_metrika.png'
+                //'https://dc740.4shared.com/img/zYnDpTnt/s23/11bf951e698/Ad_online', // 188kb 
+                'https://img.freepik.com/free-photo/sassy-goodlooking-redhead-female-yellow-sweater-listen-music-white-headphones-touch-earphones_1258-126219.jpg', //5.2kb
+                'https://mitup.ru/assets/img/partners/ya_metrika.png' //27kb
             ];
             
             let blockedCount = 0;
@@ -127,9 +127,9 @@ class AdvancedAdBlockerDetector {
         return new Promise((resolve) => {
             // Use real sources that are often blocked by uBlock
             const adScriptSources = [
-                'https://www.googleadservices.com/pagead/conversion.js',
-                'https://connect.facebook.net/en_US/fbevents.js',
-                'https://mc.yandex.ru/metrika/watch.js'
+                'https://www.googleadservices.com/pagead/conversion.js', //23.4kb
+                'https://connect.facebook.net/en_US/fbevents.js', //84.6kb
+                'https://mc.yandex.ru/metrika/watch.js' //75.7kb
             ];
             
             let blockedCount = 0;
@@ -215,8 +215,6 @@ class AdvancedAdBlockerDetector {
             { tag: 'div', className: 'google-ads', text: '🔍 GOOGLE ADS - FIND WHAT YOU NEED' },
             { tag: 'div', className: 'facebook-ads', text: '📘 FACEBOOK ADS - CONNECT WITH US' },
             { tag: 'div', className: 'popup-ad', text: '💥 POPUP AD - EXCLUSIVE DEAL!' },
-            { tag: 'div', className: 'sidebar-ad', text: '📋 SIDEBAR AD - RELATED OFFERS' },
-            { tag: 'div', className: 'header-ad', text: '📰 HEADER AD - TOP DEALS' },
             { tag: 'div', className: 'footer-ad', text: '👣 FOOTER AD - BOTTOM OFFERS' }
         ];
         
