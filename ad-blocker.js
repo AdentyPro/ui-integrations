@@ -32,8 +32,8 @@ class AdvancedAdBlockerDetector {
      * Launch all tests
      */
     async detect() {
+        this.start = performance.now();
         if (this.options.debug) {
-            this.start = performance.now();
             console.log('🚀 Launch AdBlocker...');
         }
 
@@ -46,11 +46,13 @@ class AdvancedAdBlockerDetector {
         // Wait finishing all tests
         await Promise.allSettled(tests);
         
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        //await new Promise(resolve => setTimeout(resolve, 1000));
         
         this.evaluateResults();
+        
+        this.finish = performance.now();
+
         if (this.options.debug) {
-            this.finish = performance.now();
             console.log('Time of detecting: ', this.finish - this.start);
         }
         return this.adBlockerDetected;
@@ -61,6 +63,10 @@ class AdvancedAdBlockerDetector {
      */
     async testImage() {
         return new Promise((resolve) => {
+            let startExecuting = 0;
+            let finishExecuting = 0;
+
+            startExecuting = performance.now();
             // use real domains that ofter are blocked
             const suspiciousDomains = [
                 //'https://dc740.4shared.com/img/zYnDpTnt/s23/11bf951e698/Ad_online', // 188kb 
@@ -117,9 +123,12 @@ class AdvancedAdBlockerDetector {
                 if (completedImages === totalImages) {
                     // If at least one image was blocked it is positive case
                     this.results.image = blockedCount > 0;
+
+                    finishExecuting = performance.now();
                     
                     if (this.options.debug) {
                         console.log(`📊 Images: ${blockedCount}/${totalImages} blocked`);
+                        console.log(`📊 Images executing time: ${finishExecuting - startExecuting}`);
                     }
                     
                     resolve();
@@ -133,6 +142,10 @@ class AdvancedAdBlockerDetector {
      */
     async testScript() {
         return new Promise((resolve) => {
+            let startExecuting = 0;
+            let finishExecuting = 0;
+
+            startExecuting = performance.now();
             // Use real sources that are often blocked by uBlock
             const adScriptSources = [
                 'https://www.googleadservices.com/pagead/conversion.js', //23.4kb
@@ -195,8 +208,11 @@ class AdvancedAdBlockerDetector {
                     // If more than half of scripts are blocked, consider adblocker detected
                     this.results.script = blockedCount > 0;
                     
+                    finishExecuting = performance.now();
+
                     if (this.options.debug) {
                         console.log(`📊 Scripts: ${blockedCount}/${totalScripts} blocked`);
+                        console.log(`📊 Scripts executing time: ${finishExecuting - startExecuting}`);
                     }
                     
                     resolve();
@@ -209,6 +225,11 @@ class AdvancedAdBlockerDetector {
      * Test 3: HTML elements with signs of advertising
      */
     testHtml() {
+        let startExecuting = 0;
+        let finishExecuting = 0;
+        
+        startExecuting = performance.now();
+
         // Create temporary elements for testing with explicit signs of advertising
         const testElements = [
             { tag: 'div', className: 'ad-banner', text: '🔥 HOT DEALS! 🔥 CLICK HERE NOW! 🔥 LIMITED TIME OFFER! 🔥' },
@@ -276,8 +297,11 @@ class AdvancedAdBlockerDetector {
         
         this.results.html = hiddenCount > 0;
         
+        finishExecuting = performance.now();
+
         if (this.options.debug) {
             console.log(this.results.html ? '❌ HTML elements blocked' : '✅ HTML elements visible');
+            console.log(`📊 HTML elements  executing time: ${finishExecuting - startExecuting}`);
         }
     }
 
