@@ -46,23 +46,15 @@ setTimeout(async () => {
 
     function processData() {
         processVidPvChange();
-        const cookieChange = processCookieChange();
+        const cookieChangeArgs = processCookieChange();
         let argumentsAdentyMetrics = {};
-        if(cookieChange.isNeedFireAdentyMetrics) {
-            argumentsAdentyMetrics = {...cookieChange.arguments, ...argumentsAdentyMetrics};
-        }
-        const fpChange = processFpChange();
-        if(fpChange.isNeedFireAdentyMetrics) {
-            argumentsAdentyMetrics = {...fpChange.arguments, ...argumentsAdentyMetrics};
-        }
-        const ipUaChange = processIpUaChange();
-        if(ipUaChange.isNeedFireAdentyMetrics) {
-            argumentsAdentyMetrics = {...ipUaChange.arguments, ...argumentsAdentyMetrics};
-        }
-        if(cookieChange.isNeedFireAdentyMetrics ||
-            fpChange.isNeedFireAdentyMetrics ||
-            ipUaChange.isNeedFireAdentyMetrics
-        ) {
+        argumentsAdentyMetrics = {...cookieChangeArgs, ...argumentsAdentyMetrics};
+        const fpChangeArgs = processFpChange();
+        argumentsAdentyMetrics = {...fpChangeArgs, ...argumentsAdentyMetrics};
+        const ipUaChangeArgs = processIpUaChange();
+        argumentsAdentyMetrics = {...ipUaChangeArgs, ...argumentsAdentyMetrics};
+        if(Object.keys(argumentsAdentyMetrics).length > 0)
+        {
             window.adenty.event.fireevent({
                 name: 'AdentyMetrics',
                 eventarguments: JSON.stringify(argumentsAdentyMetrics)
@@ -71,10 +63,7 @@ setTimeout(async () => {
     }
 
     function processCookieChange() {
-        let result = {
-            isNeedFireAdentyMetrics: false,
-            arguments: {}
-        };
+        let result = {};
 
         const cGUID = 'aidp_tt_cookieId';
         const ckCountName = 'aidp_tt_ckPVCount'; 
@@ -131,8 +120,7 @@ setTimeout(async () => {
             //     eventarguments: JSON.stringify({[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken})
             //   });
 
-            result.isNeedFireAdentyMetrics = true;
-            result.arguments = {[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken};
+            result = {[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken};
 
             document.cookie = `${cGUID}=${shortToken}; expires=${date.toUTCString()};`;
         }
@@ -150,10 +138,7 @@ setTimeout(async () => {
     }
 
     function processFpChange() {
-        let result = {
-            isNeedFireAdentyMetrics: false,
-            arguments: {}
-        };
+        let result = {};
 
         const fpName = 'aidp_tt_fp';
         const fpPVCountName = 'aidp_tt_fpPVCount';
@@ -208,8 +193,7 @@ setTimeout(async () => {
             //     eventarguments: JSON.stringify({[fpPVCountName]: sCookiefpPVCountVal, [fpName]: fpData})
             // });
 
-            result.isNeedFireAdentyMetrics = true;
-            result.arguments = {[fpPVCountName]: sCookiefpPVCountVal, [fpName]: fpData};
+            result = {[fpPVCountName]: sCookiefpPVCountVal, [fpName]: fpData};
 
             window.adenty.scookie.set({
                 name: fpName,
@@ -232,10 +216,7 @@ setTimeout(async () => {
 
     
     function processIpUaChange() {
-        let result = {
-            isNeedFireAdentyMetrics: false,
-            arguments: {}
-        };
+        let result = {};
 
         const ipUaName = 'aidp_tt_ip_ua';
         const ipUaCountName = 'aidp_tt_ip_uaPVCount';
@@ -309,8 +290,7 @@ setTimeout(async () => {
             //     eventarguments: JSON.stringify({[ipUaCountName]: sCookieIpuaPVCountVal, [ipUaName]: ipUaData})
             // });
 
-            result.isNeedFireAdentyMetrics = true;
-            result.arguments = {[ipUaCountName]: sCookieIpuaPVCountVal, [ipUaName]: ipUaData};
+            result = {[ipUaCountName]: sCookieIpuaPVCountVal, [ipUaName]: ipUaData};
 
             window.adenty.scookie.set({
                 name: ipUaName,
