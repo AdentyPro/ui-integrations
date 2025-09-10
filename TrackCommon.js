@@ -65,7 +65,8 @@ setTimeout(async () => {
     function processCookieChange() {
         let result = {};
 
-        const cGUID = 'aidp_tt_cookieId';
+        let cGUID = 'aidp_tt_cookieId';
+        const cGUIDNew = 'aidp_tt_cookieIdNew';
         let ckCountName = 'aidp_tt_ckPVCount';
         const ckCountNameNew = 'aidp_tt_ckPVCountNew';
 
@@ -92,12 +93,19 @@ setTimeout(async () => {
 
         ckCountName = ckCountNameNew;
 
-        const cGUIDKey = `${cGUID}=`;
+        let cGUIDKey = `${cGUIDNew}=`;
         const cookie = document.cookie.split(';');
-        const cookieVal = cookie.find(item => {
+        let cookieVal = cookie.find(item => {
             return item.indexOf(cGUIDKey) > -1
         });
+        if(!cookieVal) {
+            cGUIDKey = `${cGUID}=`;
+            cookieVal = cookie.find(item => {
+                return item.indexOf(cGUIDKey) > -1
+            });
+        }
         const ck = cookieVal ? (cookieVal.trim().substring(cGUIDKey.length) || '') : '';
+        cGUID = cGUIDNew;
 
         let shortToken;
         const array = new Uint8Array(8);
