@@ -66,7 +66,8 @@ setTimeout(async () => {
         let result = {};
 
         const cGUID = 'aidp_tt_cookieId';
-        const ckCountName = 'aidp_tt_ckPVCount'; 
+        let ckCountName = 'aidp_tt_ckPVCount';
+        const ckCountNameNew = 'aidp_tt_ckPVCountNew';
 
         const date = new Date();
         date.setMonth(date.getMonth() + 1);
@@ -75,12 +76,21 @@ setTimeout(async () => {
         let sCookieCkPVCountVal;
 
         try {
-            ckPVCount = window.aidpSCookieList?.find(i => i.name === ckCountName);
+            ckPVCount = window.aidpSCookieList?.find(i => i.name === ckCountNameNew);
             sCookieCkPVCountVal = Number(ckPVCount.value);
         } catch (e) {
             ckPVCount = null;
             sCookieCkPVCountVal = null;
+            try {
+                ckPVCount = window.aidpSCookieList?.find(i => i.name === ckCountName);
+                sCookieCkPVCountVal = Number(ckPVCount.value);
+            } catch(e) {
+                ckPVCount = null;
+                sCookieCkPVCountVal = null;
+            }
         }
+
+        ckCountName = ckCountNameNew;
 
         const cGUIDKey = `${cGUID}=`;
         const cookie = document.cookie.split(';');
@@ -140,8 +150,10 @@ setTimeout(async () => {
     function processFpChange() {
         let result = {};
 
-        const fpName = 'aidp_tt_fp';
-        const fpPVCountName = 'aidp_tt_fpPVCount';
+        let fpName = 'aidp_tt_fp';
+        let fpPVCountName = 'aidp_tt_fpPVCount';
+        let fpNameNew = 'aidp_tt_fpNew';
+        let fpPVCountNameNew = 'aidp_tt_fpPVCountNew';
 
         const date = new Date();
         date.setMonth(date.getMonth() + 1);
@@ -151,18 +163,32 @@ setTimeout(async () => {
         let sCookiefpPVCountVal;
 
         try {
-            fp = window.aidpSCookieList?.find(i => i.name === fpName)?.value; 
+            fp = window.aidpSCookieList?.find(i => i.name === fpNameNew).value; 
         } catch (e) {
             fp = null;
+            try {
+                fp = window.aidpSCookieList?.find(i => i.name === fpName).value; 
+            } catch (e) {
+                fp = null;
+            }
         }
+        fpName = fpNameNew;
 
         try {
-            fpPVCount = window.aidpSCookieList?.find(i => i.name === fpPVCountName);
+            fpPVCount = window.aidpSCookieList?.find(i => i.name === fpPVCountNameNew);
             sCookiefpPVCountVal = Number(fpPVCount.value);
         } catch (e) {
             fpPVCount = null;
             sCookiefpPVCountVal = null;
+            try {
+                fpPVCount = window.aidpSCookieList?.find(i => i.name === fpPVCountName);
+                sCookiefpPVCountVal = Number(fpPVCount.value);
+            } catch (e) {
+                fpPVCount = null;
+                sCookiefpPVCountVal = null;
+            }
         }
+        fpPVCountName = fpPVCountNameNew;
 
         const fpData = window.adenty?.dl?.adenty?.visit?.rid
 
@@ -218,8 +244,10 @@ setTimeout(async () => {
     function processIpUaChange() {
         let result = {};
 
-        const ipUaName = 'aidp_tt_ip_ua';
-        const ipUaCountName = 'aidp_tt_ip_uaPVCount';
+        let ipUaName = 'aidp_tt_ip_ua';
+        let ipUaCountName = 'aidp_tt_ip_uaPVCount';
+        let ipUaNameNew = 'aidp_tt_ip_uaNew';
+        let ipUaCountNameNew = 'aidp_tt_ip_uaPVCountNew';
 
         const date = new Date();
         date.setMonth(date.getMonth() + 1);
@@ -229,18 +257,32 @@ setTimeout(async () => {
         let sCookieIpuaPVCountVal;
 
         try {
-            ipUa = JSON.parse(window.aidpSCookieList?.find(i => i.name === ipUaName)?.value); 
+            ipUa = JSON.parse(window.aidpSCookieList?.find(i => i.name === ipUaNameNew).value); 
         } catch (e) {
             ipUa = null;
+            try {
+                ipUa = JSON.parse(window.aidpSCookieList?.find(i => i.name === ipUaName).value); 
+            } catch (e) {
+                ipUa = null;
+            }
         }
+        ipUaName = ipUaNameNew;
         
         try {
-            ipuaPVCount = window.aidpSCookieList?.find(i => i.name === ipUaCountName);
+            ipuaPVCount = window.aidpSCookieList?.find(i => i.name === ipUaCountNameNew);
             sCookieIpuaPVCountVal = Number(ipuaPVCount.value);
         } catch (e) {
             ipuaPVCount = null;
             sCookieIpuaPVCountVal = null;
+            try {
+                ipuaPVCount = window.aidpSCookieList?.find(i => i.name === ipUaCountName);
+                sCookieIpuaPVCountVal = Number(ipuaPVCount.value);
+            } catch (e) {
+                ipuaPVCount = null;
+                sCookieIpuaPVCountVal = null;
+            }
         }
+        ipUaCountName = ipUaCountNameNew;
 
         trc("scookieipUa="+ipUa)
         trc("sCookieIpuaPVCountVal="+sCookieIpuaPVCountVal)
@@ -315,7 +357,8 @@ setTimeout(async () => {
     }
 
     function processVidPvChange() {
-        const vidPVCountName = 'aidp_tt_vidPVCount'; 
+        let vidPVCountName = 'aidp_tt_vidPVCount';
+        let vidPVCountNameNew = 'aidp_tt_vidPVCountNew';
 
         const date = new Date();
         date.setMonth(date.getMonth() + 1);
@@ -324,12 +367,20 @@ setTimeout(async () => {
         let sCookieVidPVCountVal;
 
         try {
-            vidPVCount = window.aidpSCookieList?.find(i => i.name === vidPVCountName);
+            vidPVCount = window.aidpSCookieList?.find(i => i.name === vidPVCountNameNew);
             sCookieVidPVCountVal = Number(vidPVCount.value);
         } catch (e) {
             vidPVCount = null;
             sCookieVidPVCountVal = null;
+            try {
+                vidPVCount = window.aidpSCookieList?.find(i => i.name === vidPVCountName);
+                sCookieVidPVCountVal = Number(vidPVCount.value);
+            } catch (e) {
+                vidPVCount = null;
+                sCookieVidPVCountVal = null;
+            }
         }
+        vidPVCountName = vidPVCountNameNew;
 
         let newVidPVCount
         if (!sCookieVidPVCountVal) {
