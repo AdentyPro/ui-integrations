@@ -2,6 +2,7 @@
  * AdBlocker detector
  */
 
+(async function() {
 class AdvancedAdBlockerDetector {
     constructor(options = {}) {
         this.options = {
@@ -191,4 +192,4 @@ if (aidpIsDetectAdBlocker) {
     window.adenty?.event?.fireevent({
         name: 'AdBlockerDetected'
     });
-}
+} }) ();
