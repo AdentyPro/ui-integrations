@@ -186,7 +186,8 @@ if (typeof module !== 'undefined' && module.exports) {
 } 
 
 const aidpDete = new AdvancedAdBlockerDetector();
-if (await aidpDete.detect()) {
+const isDetect = await aidpDete.detect();
+if (isDetect) {
     window.adenty?.event?.fireevent({
         name: 'AdBlockerDetected'
     });
