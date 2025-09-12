@@ -8,20 +8,31 @@ setTimeout(async () => {
         }
     }
 
-    let paywallEventFired = false;
-    listenPaywall();
+    const performanceNow = false;
+    let start = performance.now();
+    let finish = 0;
+    let startProceedData = 0;
+    let finishProceedData = 0;
 
-    listenSubscriptionCreate();
-
-    function firePaywallEvent() {
-        if(!paywallEventFired){
-            trc('PaywallHappened');
-            window.adenty.event.fireevent({
-                name: 'PaywallHappened'
-            });
-            paywallEventFired = true;
+    function performanceLog(msg, start, finish) {
+        if(performanceNow) {
+            console.log(msg, finish - start);
         }
     }
+    listenSubscriptionCreate();
+
+    //let paywallEventFired = false;
+    //listenPaywall();
+
+    // function firePaywallEvent() {
+    //     if(!paywallEventFired){
+    //         trc('PaywallHappened');
+    //         window.adenty.event.fireevent({
+    //             name: 'PaywallHappened'
+    //         });
+    //         paywallEventFired = true;
+    //     }
+    // }
 
     function fireConversionEvent() {
         window.adenty.event.fireevent({
@@ -29,18 +40,28 @@ setTimeout(async () => {
         });
     }
 
-    async function listenPaywall() {
-        document.addEventListener('PelcroPaywallDisplayed', firePaywallEvent);
-        document.addEventListener('CallPelcroPaywallDisplayed', firePaywallEvent);
-        window.Pelcro?.paywall?.displayCloseButton();
+    async function getPaywallArgs() {
+        const modalElement = document.querySelector('#pelcro-view-meter-modal');
+        if (modalElement) {
+            //firePaywallEvent();
+            return {'paywallHit': true};
+        }
+        if(!window.Pelcro?.paywall?.displayMeterPaywall() && !window.Pelcro?.paywall?.displayNewsletterPaywall()) {
+            if(window.Pelcro?.paywall?.displayPaywall(false)){ //we pass false in order not to dispatch event
+                //firePaywallEvent();
+                return {'paywallHit': true};
+            }
+        }
         const isAlwaysWalledContent = window.xxx?.metadata?.isAlwaysWalledContent;
         const isFreeContent = window.xxx?.metadata?.isFreeContent;
         if (!+isAlwaysWalledContent && !+isFreeContent){
-            const decision = await demeter("getDecision", { args: { visitor: window.userState.userType }, onSuccess: (decision) => { return decision; }});
+            const decision = await demeter("getDecision", { args: { visitor: window.userState?.userType }, onSuccess: (decision) => { return decision; }});
             if(decision?.outcome?.wallVisibility === "always") {
-                firePaywallEvent();
+                //firePaywallEvent();
+                return {'paywallHit': true};
             }
         }
+        return {};
     }
 
     function listenSubscriptionCreate() {
@@ -83,16 +104,30 @@ setTimeout(async () => {
         processData();
     }
 
-    function processData() {
-        processVidPvChange();
-        const cookieChangeArgs = processCookieChange();
+    async function processData() {
+        startProceedData = performance.now();
+        //I use promise because paywall args func is async
+        //I have made performance testing, there is no visible diff in step by step calling and Promise, that's why let's leave promise
+        const result = await Promise.all([
+            processVidPvChange(),
+            processCookieChange(),
+            processFpChange(),
+            processIpUaChange(),
+            getPaywallArgs(),
+        ])
+        //processVidPvChange();
+        const cookieChangeArgs = result[1];//processCookieChange();
         let argumentsAdentyMetrics = {};
         argumentsAdentyMetrics = {...cookieChangeArgs, ...argumentsAdentyMetrics};
-        const fpChangeArgs = processFpChange();
+        const fpChangeArgs = result[2];// processFpChange();
         argumentsAdentyMetrics = {...fpChangeArgs, ...argumentsAdentyMetrics};
-        const ipUaChangeArgs = processIpUaChange();
+        const ipUaChangeArgs = result[3];//processIpUaChange();
         argumentsAdentyMetrics = {...ipUaChangeArgs, ...argumentsAdentyMetrics};
         argumentsAdentyMetrics = {...{'auth': !!Pelcro?.user?.read()?.id}, ...argumentsAdentyMetrics};
+        //argumentsAdentyMetrics = {...await getPaywallArgs(), ...argumentsAdentyMetrics};
+        argumentsAdentyMetrics = {...result[4], ...argumentsAdentyMetrics};
+        finishProceedData = performance.now();
+        performanceLog('proceed data ', startProceedData, finishProceedData);
         if(Object.keys(argumentsAdentyMetrics).length > 0)
         {
             window.adenty.event.fireevent({
@@ -100,9 +135,11 @@ setTimeout(async () => {
                 eventarguments: JSON.stringify(argumentsAdentyMetrics)
             });
         }
+        finish = performance.now();
+        performanceLog('all script ', start, finish);
     }
 
-    function processCookieChange() {
+    async function processCookieChange() {
         let result = {};
 
         let cGUID = 'aidp_tt_cookieId';
@@ -195,7 +232,7 @@ setTimeout(async () => {
         return result;
     }
 
-    function processFpChange() {
+    async function processFpChange() {
         let result = {};
 
         let fpName = 'aidp_tt_fp';
@@ -289,7 +326,7 @@ setTimeout(async () => {
     }
 
     
-    function processIpUaChange() {
+    async function processIpUaChange() {
         let result = {};
 
         let ipUaName = 'aidp_tt_ip_ua';
@@ -404,7 +441,7 @@ setTimeout(async () => {
         return result;
     }
 
-    function processVidPvChange() {
+    async function processVidPvChange() {
         let vidPVCountName = 'aidp_tt_vidPVCount';
         let vidPVCountNameNew = 'aidp_tt_vidPVCountNew';
 
