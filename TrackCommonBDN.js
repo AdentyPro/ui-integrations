@@ -29,7 +29,7 @@ setTimeout(async () => {
         });
     }
 
-    async function listenPaywall() {
+    function listenPaywall() {
         const modalElement = document.querySelector('#pelcro-view-meter-modal');
         if (modalElement) {
             firePaywallEvent();
