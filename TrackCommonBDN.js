@@ -44,24 +44,14 @@ setTimeout(async () => {
         const isAlwaysWalledContent = window.xxx?.metadata?.isAlwaysWalledContent;
         const isFreeContent = window.xxx?.metadata?.isFreeContent;
         if (!+isAlwaysWalledContent && !+isFreeContent){
-            const decision = await withTimeoutResolve(
-                demeter("getDecision", { args: { visitor: window.userState?.userType }, onSuccess: (decision) => { return decision; }}),
-                70,
-                null
-            );
-            trc('decision', decision)
-            if(decision?.outcome?.wallVisibility === "always") {
-                firePaywallEvent();
-                return;
-            }
+            demeter("getDecision", { args: { visitor: window.userState?.userType }, onSuccess: (decision) => { 
+                    trc('decision', decision)
+                    if(decision?.outcome?.wallVisibility === "always") {
+                        firePaywallEvent();
+                        return;
+                    }
+                }});
         }
-    }
-
-    function withTimeoutResolve(promise, ms, fallbackValue) {
-        return Promise.race([
-            promise,
-            new Promise(resolve => setTimeout(() => resolve(fallbackValue), ms)),
-        ]);
     }
 
     function listenSubscriptionCreate() {
