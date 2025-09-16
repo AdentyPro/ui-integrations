@@ -191,5 +191,5 @@ const aidpIsDetectAdBlocker = await aidpDete.detect();
 if (aidpIsDetectAdBlocker) {
     window.adenty?.event?.fireevent({
         name: 'AdBlockerDetected'
-    });
+    }, tracktoadenty = true, mode = 'http');
 } }) ();
