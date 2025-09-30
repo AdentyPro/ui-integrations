@@ -1,4 +1,4 @@
-(function() {
+(async function() {
 	async function sha256Hash(value) {
 		const encoder = new TextEncoder();
 		const data = encoder.encode(value);
