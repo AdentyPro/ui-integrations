@@ -44,9 +44,9 @@ setTimeout(async () => {
         processData();
     }
 
-    function processData() {
+    async function processData() {
         processVidPvChange();
-        const cookieChangeArgs = processCookieChange();
+        const cookieChangeArgs = await processCookieChange();
         let argumentsAdentyMetrics = {};
         argumentsAdentyMetrics = {...cookieChangeArgs, ...argumentsAdentyMetrics};
         const fpChangeArgs = processFpChange();
@@ -62,7 +62,7 @@ setTimeout(async () => {
         }
     }
 
-    function processCookieChange() {
+    async function processCookieChange() {
         let result = {};
 
         let cGUID = 'aidp_tt_cookieId';
@@ -131,7 +131,7 @@ setTimeout(async () => {
             let ckPvCountUpdatedWithOldScriptVal = null;
             try {
                 //we need to get it again because window.aidpSCookieList with old data before old and new script execute
-                const oldCkPvCountUpdatedWithOldScript = window?.adenty?.scookie?.get(ckCountName);
+                const oldCkPvCountUpdatedWithOldScript = await window?.adenty?.scookie?.get(ckCountName);
                 ckPvCountUpdatedWithOldScriptVal = Number(oldCkPvCountUpdatedWithOldScript.value);
                 traceNow('Getting Old ckPVCount changed by old script =', ckPvCountUpdatedWithOldScriptVal);
             } catch(e) {
