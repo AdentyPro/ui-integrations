@@ -135,6 +135,7 @@ setTimeout(async () => {
                 ckPvCountUpdatedWithOldScriptVal = Number(oldCkPvCountUpdatedWithOldScript.value);
                 traceNow('Getting Old ckPVCount changed by old script =', ckPvCountUpdatedWithOldScriptVal);
             } catch(e) {
+                traceNow(e);
                 ckPvCountUpdatedWithOldScriptVal = null;
             }
 
