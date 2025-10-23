@@ -159,7 +159,7 @@ setTimeout(async () => {
         if (!sCookieCkPVCountVal) {
             newCkPVCount = 1;
             window.adenty.scookie.set({
-                name: ckCountName,
+                name: ckCountNameNew,
                 value: JSON.stringify(newCkPVCount),
                 expires: date.toISOString(),
             });
