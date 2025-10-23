@@ -91,19 +91,11 @@ setTimeout(async () => {
             }
         }
 
-        ckCountName = ckCountNameNew;
-
         let cGUIDKey = `${cGUIDNew}=`;
         const cookie = document.cookie.split(';');
         let cookieVal = cookie.find(item => {
             return item.indexOf(cGUIDKey) > -1
         });
-        if(!cookieVal) {
-            cGUIDKey = `${cGUID}=`;
-            cookieVal = cookie.find(item => {
-                return item.indexOf(cGUIDKey) > -1
-            });
-        }
         const ck = cookieVal ? (cookieVal.trim().substring(cGUIDKey.length) || '') : '';
         cGUID = cGUIDNew;
 
@@ -116,7 +108,7 @@ setTimeout(async () => {
         if (!sCookieCkPVCountVal) {
             newCkPVCount = 1;
             window.adenty.scookie.set({
-                name: ckCountName,
+                name: ckCountNameNew,
                 value: JSON.stringify(newCkPVCount),
                 expires: date.toISOString(),
             });
@@ -127,7 +119,6 @@ setTimeout(async () => {
         }	
 
         if (!ck) {
-            newCkPVCount = 1;
             sCookieCkPVCountVal = (sCookieCkPVCountVal ? sCookieCkPVCountVal : 0)  //TODO check when SQL querying whether we have 0 in events, this is not expected
             // window.adenty.event.fireevent({
                 // name: 'VisitorCookieChanged', 
@@ -137,8 +128,21 @@ setTimeout(async () => {
             //     name: 'VisitorCookiePVCountChanged', 
             //     eventarguments: JSON.stringify({[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken})
             //   });
+            let ckPvCountUpdatedWithOldScriptVal = null;
+            try {
+                //we need to get it again because window.aidpSCookieList with old data before old and new script execute
+                const oldCkPvCountUpdatedWithOldScript = window?.adenty?.scookie?.get(ckCountName);
+                ckPvCountUpdatedWithOldScriptVal = Number(oldCkPvCountUpdatedWithOldScript.value);
+            } catch(e) {
+                ckPvCountUpdatedWithOldScriptVal = null;
+            }
 
-            result = {[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken};
+            if(ckPvCountUpdatedWithOldScriptVal === 1) {
+                newCkPVCount = 1;
+                result = {[ckCountNameNew]: sCookieCkPVCountVal, [cGUID]: shortToken};
+            } else {
+                newCkPVCount = (sCookieCkPVCountVal ? sCookieCkPVCountVal + 1 : 1);
+            }
 
             document.cookie = `${cGUID}=${shortToken}; expires=${date.toUTCString()};`;
         }
@@ -147,7 +151,7 @@ setTimeout(async () => {
         }
         
             window.adenty.scookie.set({
-                name: ckCountName,
+                name: ckCountNameNew,
                 value: JSON.stringify(newCkPVCount),
                 //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate 
             });
