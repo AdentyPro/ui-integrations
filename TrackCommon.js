@@ -133,9 +133,9 @@ setTimeout(async () => {
                 //we need to get it again because window.aidpSCookieList with old data before old and new script execute
                 const oldCkPvCountUpdatedWithOldScript = await window?.adenty?.scookie?.get(ckCountName);
                 ckPvCountUpdatedWithOldScriptVal = Number(oldCkPvCountUpdatedWithOldScript.value);
-                traceNow('Getting Old ckPVCount changed by old script =', ckPvCountUpdatedWithOldScriptVal);
+                trc('Getting Old ckPVCount changed by old script =', ckPvCountUpdatedWithOldScriptVal);
             } catch(e) {
-                traceNow(e);
+                trc(e);
                 ckPvCountUpdatedWithOldScriptVal = null;
             }
 
