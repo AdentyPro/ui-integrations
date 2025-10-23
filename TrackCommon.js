@@ -1,6 +1,6 @@
 //Common
 setTimeout(async () => {
-    const traceNow = false;
+    const traceNow = true;
 
     function trc(message) {
         if (traceNow) {
@@ -133,6 +133,7 @@ setTimeout(async () => {
                 //we need to get it again because window.aidpSCookieList with old data before old and new script execute
                 const oldCkPvCountUpdatedWithOldScript = window?.adenty?.scookie?.get(ckCountName);
                 ckPvCountUpdatedWithOldScriptVal = Number(oldCkPvCountUpdatedWithOldScript.value);
+                traceNow('Getting Old ckPVCount changed by old script =', ckPvCountUpdatedWithOldScriptVal);
             } catch(e) {
                 ckPvCountUpdatedWithOldScriptVal = null;
             }
