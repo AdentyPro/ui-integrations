@@ -123,7 +123,8 @@ setTimeout(async () => {
       name: ckCountName,
       value: JSON.stringify(newCkPVCount),
       //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate 
-    });   
+    });
+    window.aidp_oldCkPvCountUpdatedWithOldScript = newCkPVCount;
   }
 
 }, 0)

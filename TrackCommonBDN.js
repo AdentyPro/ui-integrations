@@ -181,21 +181,23 @@ setTimeout(async () => {
             //   });
             let ckPvCountUpdatedWithOldScriptVal = null;
             try {
-                //we need to get it again because window.aidpSCookieList with old data before old and new script execute
-                const oldCkPvCountUpdatedWithOldScript = await window?.adenty?.scookie?.get(ckCountName);
-                ckPvCountUpdatedWithOldScriptVal = Number(oldCkPvCountUpdatedWithOldScript.value);
-                trc('Getting Old ckPVCount changed by old script = ' + ckPvCountUpdatedWithOldScriptVal);
+                //we need to get old script updated cookie that we set to window
+                const oldCkPvCountUpdatedWithOldScript = window.aidp_oldCkPvCountUpdatedWithOldScript;
+                ckPvCountUpdatedWithOldScriptVal = Number(oldCkPvCountUpdatedWithOldScript);
+                trc('Getting Old ckPVCount changed by old script =' + ckPvCountUpdatedWithOldScriptVal);
             } catch(e) {
                 trc(e);
                 ckPvCountUpdatedWithOldScriptVal = null;
             }
 
-            if(ckPvCountUpdatedWithOldScriptVal === 1) {
-                newCkPVCount = 1;
+            //here we need to check old script cookie = 1 but for support only common version we need to check not having old script cookie
+            if(ckPvCountUpdatedWithOldScriptVal === 1 || !ckPvCountUpdatedWithOldScriptVal) {
                 result = {[ckCountNameNew]: sCookieCkPVCountVal, [cGUID]: shortToken};
-            } else {
-                newCkPVCount = (sCookieCkPVCountVal ? sCookieCkPVCountVal + 1 : 1);
             }
+            
+            // here we check if we have ckPvCountUpdatedWithOldScriptVal(cookie from old script)
+            // we support both versions(ckPvCountUpdatedWithOldScriptVal exists) or only this one(ckPvCountUpdatedWithOldScriptVal doesn't exist then set 1)
+            newCkPVCount = ckPvCountUpdatedWithOldScriptVal ? ckPvCountUpdatedWithOldScriptVal : 1;
 
             document.cookie = `${cGUID}=${shortToken}; expires=${date.toUTCString()};`;
         }
