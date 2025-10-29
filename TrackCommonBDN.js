@@ -94,9 +94,9 @@ setTimeout(async () => {
         processData();
     }
 
-    async function processData() {
+    function processData() {
         processVidPvChange();
-        const cookieChangeArgs = await processCookieChange();
+        const cookieChangeArgs = processCookieChange();
         let argumentsAdentyMetrics = {};
         argumentsAdentyMetrics = {...cookieChangeArgs, ...argumentsAdentyMetrics};
         const fpChangeArgs = processFpChange();
@@ -113,7 +113,7 @@ setTimeout(async () => {
         }
     }
 
-    async function processCookieChange() {
+    function processCookieChange() {
         let result = {};
 
         let cGUID = 'aidp_tt_cookieId';
