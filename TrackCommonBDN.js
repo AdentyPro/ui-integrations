@@ -190,8 +190,8 @@ setTimeout(async () => {
                 ckPvCountUpdatedWithOldScriptVal = null;
             }
 
-            //here we need to check old script cookie = 1 but for support only common version we need to check not having old script cookie
-            if(ckPvCountUpdatedWithOldScriptVal === 1 || !ckPvCountUpdatedWithOldScriptVal) {
+            //here we need to check old script cookie = 1
+            if(ckPvCountUpdatedWithOldScriptVal === 1) {
                 result = {[ckCountNameNew]: sCookieCkPVCountVal, [cGUID]: shortToken};
             }
             
