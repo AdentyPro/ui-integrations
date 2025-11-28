@@ -38,7 +38,7 @@
 
     !!activity_data &&
         window.adenty.event.fireevent({
-            name: 'by-tek',
+            name: 'NPV',
             eventarguments: JSON.stringify(activity_data),
         });
 })();
