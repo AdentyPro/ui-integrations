@@ -1,9 +1,12 @@
 (function () {
-    const NAMESPACE = 'adenty_metrics';
+    const NAMESPACE = 'activity_data';
+    const value = window.location?.host;
 
-    if (!window[NAMESPACE]) {
-        window[NAMESPACE] = {};
+    if(!!value) {
+        if (!window[NAMESPACE]) {
+            window[NAMESPACE] = {};
+        }
+        window[NAMESPACE].page_urlhost = value;
     }
-    window[NAMESPACE].page_urlhost = window.location.host;
 })();
 

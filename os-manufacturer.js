@@ -1,9 +1,12 @@
 (function () {
-    const NAMESPACE = 'adenty_metrics';
+    const NAMESPACE = 'activity_data';
+    const value = window.adenty?.dl?.adenty?.device?.os?.manufacturer;
 
-    if (!window[NAMESPACE]) {
-        window[NAMESPACE] = {};
+    if(!!value) {
+        if (!window[NAMESPACE]) {
+            window[NAMESPACE] = {};
+        }
+        window[NAMESPACE].os_manufacturer = value;
     }
-    window[NAMESPACE].os_manufacturer = window.adenty.dl.adenty.device.os.manufacturer;
 })();
 

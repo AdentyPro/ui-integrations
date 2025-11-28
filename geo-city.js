@@ -1,9 +1,12 @@
 (function () {
-    const NAMESPACE = 'adenty_metrics';
+    const NAMESPACE = 'activity_data';
+    const value = window.adenty?.dl?.adenty?.visit?.geo?.city;
 
-    if (!window[NAMESPACE]) {
-        window[NAMESPACE] = {};
+    if(!!value) {
+        if (!window[NAMESPACE]) {
+            window[NAMESPACE] = {};
+        }
+        window[NAMESPACE].geo_city = value;
     }
-    window[NAMESPACE].geo_city = window.adenty.dl.adenty.visit.geo.city;
 })();
 

@@ -1,11 +1,12 @@
 (function () {
-    const NAMESPACE = 'adenty_metrics';
+    const NAMESPACE = 'activity_data';
     const paramValue = new URLSearchParams(window.location.search).get('utm_content');
 
-    if (!window[NAMESPACE]) {
-        window[NAMESPACE] = {};
+    if(!!paramValue) {
+        if (!window[NAMESPACE]) {
+            window[NAMESPACE] = {};
+        }
+        window[NAMESPACE].utm_content = paramValue;
     }
-
-    window[NAMESPACE].utm_content = paramValue;
 })();
 
