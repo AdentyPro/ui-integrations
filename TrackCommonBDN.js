@@ -99,8 +99,6 @@ setTimeout(async () => {
         const cookieChangeArgs = processCookieChange();
         let argumentsAdentyMetrics = {};
         argumentsAdentyMetrics = {...cookieChangeArgs, ...argumentsAdentyMetrics};
-        const fpChangeArgs = processFpChange();
-        argumentsAdentyMetrics = {...fpChangeArgs, ...argumentsAdentyMetrics};
         const ipUaChangeArgs = processIpUaChange();
         argumentsAdentyMetrics = {...ipUaChangeArgs, ...argumentsAdentyMetrics};
         argumentsAdentyMetrics = {...{'auth': !!Pelcro?.user?.read()?.id}, ...argumentsAdentyMetrics};
@@ -210,99 +208,6 @@ setTimeout(async () => {
                 value: JSON.stringify(newCkPVCount),
                 //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate 
             });
-
-        return result;
-    }
-
-    function processFpChange() {
-        let result = {};
-
-        let fpName = 'aidp_tt_fp';
-        let fpPVCountName = 'aidp_tt_fpPVCount';
-        let fpNameNew = 'aidp_tt_fpNew';
-        let fpPVCountNameNew = 'aidp_tt_fpPVCountNew';
-
-        const date = new Date();
-        date.setMonth(date.getMonth() + 1);
-
-        let fp;
-        let fpPVCount;
-        let sCookiefpPVCountVal;
-
-        try {
-            fp = window.aidpSCookieList?.find(i => i.name === fpNameNew).value; 
-        } catch (e) {
-            fp = null;
-            try {
-                fp = window.aidpSCookieList?.find(i => i.name === fpName).value; 
-            } catch (e) {
-                fp = null;
-            }
-        }
-        fpName = fpNameNew;
-
-        try {
-            fpPVCount = window.aidpSCookieList?.find(i => i.name === fpPVCountNameNew);
-            sCookiefpPVCountVal = Number(fpPVCount.value);
-        } catch (e) {
-            fpPVCount = null;
-            sCookiefpPVCountVal = null;
-            try {
-                fpPVCount = window.aidpSCookieList?.find(i => i.name === fpPVCountName);
-                sCookiefpPVCountVal = Number(fpPVCount.value);
-            } catch (e) {
-                fpPVCount = null;
-                sCookiefpPVCountVal = null;
-            }
-        }
-        fpPVCountName = fpPVCountNameNew;
-
-        const fpData = window.adenty?.dl?.adenty?.visit?.rid
-
-        let newfpPVCount
-        if (!sCookiefpPVCountVal || !fp) {
-            window.adenty.scookie.set({
-                name: fpName,
-                value: fpData,
-                expires: date.toISOString(),
-            });
-            window.adenty.scookie.set({
-                name: fpPVCountName,
-                value: JSON.stringify(1),
-                expires: date.toISOString(),
-            });
-            return result;
-        }
-
-        if (fp !== fpData) {
-            newfpPVCount = 1;
-            sCookiefpPVCountVal = (sCookiefpPVCountVal ? sCookiefpPVCountVal: 0) //TODO check when SQL querying whether we have 0 in events, this is not expected
-            // window.adenty.event.fireevent({
-                // name: 'VisitorFPChanged', 
-                // eventarguments: JSON.stringify({[fpName]: fpData})
-            // });
-            // window.adenty.event.fireevent({ 
-            //     name: 'VisitorFPCountChanged',
-            //     eventarguments: JSON.stringify({[fpPVCountName]: sCookiefpPVCountVal, [fpName]: fpData})
-            // });
-
-            result = {[fpPVCountName]: sCookiefpPVCountVal, [fpName]: fpData};
-
-            window.adenty.scookie.set({
-                name: fpName,
-                value: fpData,
-                //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate
-            });
-        }
-        else {
-            newfpPVCount = (sCookiefpPVCountVal ? sCookiefpPVCountVal + 1 : 1);
-        }
-
-        window.adenty.scookie.set({
-            name: fpPVCountName,
-            value: JSON.stringify(newfpPVCount),
-            //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate
-        });
 
         return result;
     }
