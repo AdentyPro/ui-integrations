@@ -191,7 +191,7 @@
         formData.forEach((value, key) => {
           data[key] = value;
         });
-        const event = new CustomEvent('aidpCustomService', {
+        const event = new CustomEvent('DemoCustomerServiceProceed', {
           detail: data
         });
         window.dispatchEvent(event);
@@ -218,7 +218,7 @@
     openPopup();
 
     function saveToSCookieFn() {
-      window.addEventListener('aidpCustomService', (event) => window.adenty.scookie.set({name: 'customService', value: JSON.stringify(event.detail)}));
+      window.addEventListener('DemoCustomerServiceProceed', (event) => window.adenty.scookie.set({name: 'demoCustomerServiceInfo', value: JSON.stringify(event.detail)}));
     }
   }
 

@@ -110,9 +110,9 @@ window.addEventListener("VisitorPageView", () => {
     const siteName = "demo.adentypro.com";
     const siteForId = "adentypro";
     window.adenty?.dl.dlchanges.subscribe(async (res) => {
-        if((window.adenty?.dl?.urlIdVendor?.id != null && urlId !== window.adenty?.dl?.urlIdVendor?.id && urlId == undefined)) {
-            urlId = window.adenty?.dl?.urlIdVendor?.id;
-            segment = window.adenty?.dl?.segmentVendor?.segment;
+        if((window.adenty?.dl?.demoUrlId?.id != null && urlId !== window.adenty?.dl?.demoUrlId?.id && urlId == undefined)) {
+            urlId = window.adenty?.dl?.demoUrlId?.id;
+            segment = window.adenty?.dl?.demoSegment?.segment;
             let cookies = await window.adenty?.scookie.get();
 
             // fill vid
@@ -123,30 +123,30 @@ window.addEventListener("VisitorPageView", () => {
             }
 
             // fill segments
-            const segmentVendorValue = window.adenty?.dl?.segmentVendor;
-            const sCookieSegments = cookies?.find(cookie => cookie?.name === "aidp-segments");
+            const segmentVendorValue = window.adenty?.dl?.demoSegment;
+            const sCookieSegments = cookies?.find(cookie => cookie?.name === "demoSegments");
             if(!sCookieSegments && !isSegmentInit) {
-                window.adenty?.scookie.set({name: "aidp-segments", value: JSON.stringify([]), scope: "SiteGroup"});
+                window.adenty?.scookie.set({name: "demoSegments", value: JSON.stringify([]), scope: "SiteGroup"});
                 isSegmentInit = true;
             } else if(segmentVendorValue?.segment) {
                 const currentSegments = sCookieSegments?.value ? JSON.parse(sCookieSegments.value) : [];
                 if(!currentSegments.includes(segmentVendorValue.segment)) {
                     currentSegments.push(segmentVendorValue.segment);
                     segment = segmentVendorValue.segment;
-                    window.adenty?.scookie.set({name: "aidp-segments", value: JSON.stringify([...new Set(currentSegments)]), scope: "SiteGroup"});
+                    window.adenty?.scookie.set({name: "demoSegments", value: JSON.stringify([...new Set(currentSegments)]), scope: "SiteGroup"});
                 }
             }
 
             // fill urlId
-            const urlIdVendorValue = window.adenty?.dl?.urlIdVendor;
-            if(urlIdVendorValue?.id != null && !(cookies || [])?.find(cookie => cookie?.name === "id-bridging-1")) {
-                window.adenty?.scookie.set({name: "id-bridging-1", value: siteForId + '-' + urlIdVendorValue?.id, scope: "SiteGroup"});
+            const urlIdVendorValue = window.adenty?.dl?.demoUrlId;
+            if(urlIdVendorValue?.id != null && !(cookies || [])?.find(cookie => cookie?.name === "demoIdBridging1")) {
+                window.adenty?.scookie.set({name: "demoIdBridging1", value: siteForId + '-' + urlIdVendorValue?.id, scope: "SiteGroup"});
                 urlId = urlIdVendorValue?.id;
             }
 
             // fill history
-            if (!cookies?.find(cookie => cookie?.name === "aidp-history") && !isHistoryInit) {
-                window.adenty?.scookie.set({name: "aidp-history", value: JSON.stringify([]), scope: "SiteGroup"});
+            if (!cookies?.find(cookie => cookie?.name === "demoPageHistory") && !isHistoryInit) {
+                window.adenty?.scookie.set({name: "demoPageHistory", value: JSON.stringify([]), scope: "SiteGroup"});
                 isHistoryInit = true;
             }
         }
@@ -170,8 +170,8 @@ window.addEventListener("VisitorPageView", () => {
     async function analyticsButtonClickHandler(e) {
         e.preventDefault();
         let cookies = await window.adenty?.scookie.get();
-        if(!(cookies || [])?.find(cookie => cookie?.name === "aidp-smg_Analytics")) {
-            let sCookieHistory = (cookies || [])?.find(cookie => cookie?.name === "aidp-history");
+        if(!(cookies || [])?.find(cookie => cookie?.name === "demoSegmentAnalytics")) {
+            let sCookieHistory = (cookies || [])?.find(cookie => cookie?.name === "demoPageHistory");
             let sCookieHistoryValue = sCookieHistory ? JSON.parse(sCookieHistory.value) : [];
             let neededSite = sCookieHistoryValue?.find((siteObject) => siteObject.site === siteName);
             
@@ -184,13 +184,13 @@ window.addEventListener("VisitorPageView", () => {
                 sCookieHistoryValue = [...sCookieHistoryValue, neededSite];
             }
             // for getting segment from api(Andrey said we can't get title directly)
-            localStorage.setItem("titleName", "Track Visitor Activity");
+            localStorage.setItem("DemoPageTitleName", "Track Visitor Activity");
         
             neededSite.articles.push("Track Visitor Activity");
             neededSite.keywords.push("analytics");
         
-            window.adenty?.scookie.set({name: "aidp-history", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
-            window.adenty?.scookie.set({name: "aidp-smg_Analytics", value: JSON.stringify(true), scope: "SiteGroup"});
+            window.adenty?.scookie.set({name: "demoPageHistory", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
+            window.adenty?.scookie.set({name: "demoSegmentAnalytics", value: JSON.stringify(true), scope: "SiteGroup"});
         }
 
         window.location.href = "https://demo.adentypro.com/solutions/analytics";
@@ -199,8 +199,8 @@ window.addEventListener("VisitorPageView", () => {
     async function remarketingButtonClickHandler(e) {
         e.preventDefault();
         let cookies = await window.adenty?.scookie.get();
-        if(!(cookies || []).find(cookie => cookie?.name === "aidp-smg_Remarketing")) {
-            let sCookieHistory = (cookies || []).find(cookie => cookie?.name === "aidp-history");
+        if(!(cookies || []).find(cookie => cookie?.name === "demoSegmentRemarketing")) {
+            let sCookieHistory = (cookies || []).find(cookie => cookie?.name === "demoPageHistory");
             let sCookieHistoryValue = sCookieHistory ? JSON.parse(sCookieHistory.value) : [];
             let neededSite = sCookieHistoryValue?.find((siteObject) => siteObject.site === siteName);
         
@@ -213,13 +213,13 @@ window.addEventListener("VisitorPageView", () => {
                 sCookieHistoryValue = [...sCookieHistoryValue, neededSite];
             }
             // for getting segment from api(Andrey said we can't get title directly)
-            localStorage.setItem("titleName", "Remarketing");
+            localStorage.setItem("DemoPageTitleName", "Remarketing");
         
             neededSite.articles.push("Remarketing");
             neededSite.keywords.push("remarketing");
         
-            window.adenty?.scookie.set({name: "aidp-history", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
-            window.adenty?.scookie.set({name: "aidp-smg_Remarketing", value: JSON.stringify(true), scope: "SiteGroup"});
+            window.adenty?.scookie.set({name: "demoPageHistory", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
+            window.adenty?.scookie.set({name: "demoSegmentRemarketing", value: JSON.stringify(true), scope: "SiteGroup"});
         }
 
         window.location.href = "https://demo.adentypro.com/solutions/remarketing";
@@ -228,8 +228,8 @@ window.addEventListener("VisitorPageView", () => {
     async function identityButtonClickHandler(e) {
         e.preventDefault();
         let cookies = await window.adenty?.scookie.get();
-        if(!(cookies || []).find(cookie => cookie?.name === "aidp-smg_Identity")) {
-            let sCookieHistory = (cookies || []).find(cookie => cookie?.name === "aidp-history");
+        if(!(cookies || []).find(cookie => cookie?.name === "demoSegmentIdentity")) {
+            let sCookieHistory = (cookies || []).find(cookie => cookie?.name === "demoPageHistory");
             let sCookieHistoryValue = sCookieHistory ? JSON.parse(sCookieHistory.value) : [];
             let neededSite = sCookieHistoryValue?.find((siteObject) => siteObject.site === siteName);
             
@@ -242,13 +242,13 @@ window.addEventListener("VisitorPageView", () => {
                 sCookieHistoryValue = [...sCookieHistoryValue, neededSite];
             }
             // for getting segment from api(Andrey said we can't get title directly)
-            localStorage.setItem("titleName", "Identify and Track Anonymous Visitors");
+            localStorage.setItem("DemoPageTitleName", "Identify and Track Anonymous Visitors");
         
             neededSite.articles.push("Identify and Track Anonymous Visitors");
             neededSite.keywords.push("identity");
         
-            window.adenty?.scookie.set({name: "aidp-history", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
-            window.adenty?.scookie.set({name: "aidp-smg_Identity", value: JSON.stringify(true), scope: "SiteGroup"});
+            window.adenty?.scookie.set({name: "demoPageHistory", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
+            window.adenty?.scookie.set({name: "demoSegmentIdentity", value: JSON.stringify(true), scope: "SiteGroup"});
         }
 
         window.location.href = "https://demo.adentypro.com/solutions/identity";

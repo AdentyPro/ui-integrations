@@ -111,9 +111,9 @@ window.addEventListener("VisitorPageView", () => {
     const siteForId = "lightpointglobal";
 
     window.adenty?.dl.dlchanges.subscribe(async (res) => {
-        if((window.adenty?.dl?.urlIdVendor?.id != null && urlId !== window.adenty?.dl?.urlIdVendor?.id && urlId == undefined)) {
-            urlId = window.adenty?.dl?.urlIdVendor?.id;
-            segment = window.adenty?.dl?.segmentVendor?.segment;
+        if((window.adenty?.dl?.demoUrlId?.id != null && urlId !== window.adenty?.dl?.demoUrlId?.id && urlId == undefined)) {
+            urlId = window.adenty?.dl?.demoUrlId?.id;
+            segment = window.adenty?.dl?.demoSegment?.segment;
             let cookies = await window.adenty?.scookie.get();
 
             // fill vid
@@ -124,30 +124,30 @@ window.addEventListener("VisitorPageView", () => {
             }
 
             // fill segments
-            const segmentVendorValue = window.adenty?.dl?.segmentVendor;
-            const sCookieSegments = cookies?.find(cookie => cookie?.name === "aidp-segments");
+            const segmentVendorValue = window.adenty?.dl?.demoSegment;
+            const sCookieSegments = cookies?.find(cookie => cookie?.name === "demoSegments");
             if(!sCookieSegments && !isSegmentInit) {
-                window.adenty?.scookie.set({name: "aidp-segments", value: JSON.stringify([]), scope: "SiteGroup"});
+                window.adenty?.scookie.set({name: "demoSegments", value: JSON.stringify([]), scope: "SiteGroup"});
                 isSegmentInit = true;
             } else if(segmentVendorValue?.segment) {
                 const currentSegments = sCookieSegments?.value ? JSON.parse(sCookieSegments.value) : [];
                 if(!currentSegments.includes(segmentVendorValue.segment)) {
                     currentSegments.push(segmentVendorValue.segment);
                     segment = segmentVendorValue.segment;
-                    window.adenty?.scookie.set({name: "aidp-segments", value: JSON.stringify([...new Set(currentSegments)]), scope: "SiteGroup"});
+                    window.adenty?.scookie.set({name: "demoSegments", value: JSON.stringify([...new Set(currentSegments)]), scope: "SiteGroup"});
                 }
             }
 
             // fill urlId
-            const urlIdVendorValue = window.adenty?.dl?.urlIdVendor;
-            if(urlIdVendorValue?.id != null && !(cookies || [])?.find(cookie => cookie?.name === "id-bridging-2")) {
-                window.adenty?.scookie.set({name: "id-bridging-2", value: siteForId + '-' + urlIdVendorValue?.id, scope: "SiteGroup"});
+            const urlIdVendorValue = window.adenty?.dl?.demoUrlId;
+            if(urlIdVendorValue?.id != null && !(cookies || [])?.find(cookie => cookie?.name === "demoIdBridging2")) {
+                window.adenty?.scookie.set({name: "demoIdBridging2", value: siteForId + '-' + urlIdVendorValue?.id, scope: "SiteGroup"});
                 urlId = urlIdVendorValue?.id;
             }
 
             // fill history
-            if (!cookies?.find(cookie => cookie?.name === "aidp-history") && !isHistoryInit) {
-                window.adenty?.scookie.set({name: "aidp-history", value: JSON.stringify([]), scope: "SiteGroup"});
+            if (!cookies?.find(cookie => cookie?.name === "demoPageHistory") && !isHistoryInit) {
+                window.adenty?.scookie.set({name: "demoPageHistory", value: JSON.stringify([]), scope: "SiteGroup"});
                 isHistoryInit = true;
             }
         }
@@ -166,8 +166,8 @@ window.addEventListener("VisitorPageView", () => {
         e.preventDefault();
 
         let cookies = await window.adenty?.scookie.get();
-        if(!(cookies || [])?.find(cookie => cookie?.name === "aidp-smg_Fintech")) {
-            let sCookieHistory = (cookies || [])?.find(cookie => cookie?.name === "aidp-history");
+        if(!(cookies || [])?.find(cookie => cookie?.name === "demoSegmentFintech")) {
+            let sCookieHistory = (cookies || [])?.find(cookie => cookie?.name === "demoPageHistory");
             let sCookieHistoryValue = sCookieHistory ? JSON.parse(sCookieHistory.value) : [];
             let neededSite = sCookieHistoryValue?.find((siteObject) => siteObject.site === siteName);
             
@@ -181,13 +181,13 @@ window.addEventListener("VisitorPageView", () => {
             }
             
             // Запись в localStorage
-            localStorage.setItem("titleName", "Fintech Software Development");
+            localStorage.setItem("DemoPageTitleName", "Fintech Software Development");
             
             neededSite.articles.push("Fintech Software Development");
             neededSite.keywords.push("fintech");
         
-            await window.adenty?.scookie.set({name: "aidp-history", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
-            await window.adenty?.scookie.set({name: "aidp-smg_Fintech", value: JSON.stringify(true), scope: "SiteGroup"});
+            await window.adenty?.scookie.set({name: "demoPageHistory", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
+            await window.adenty?.scookie.set({name: "demoSegmentFintech", value: JSON.stringify(true), scope: "SiteGroup"});
         }
 
         window.location.href = "https://demo.lightpointglobal.com/verticals/fintech";
@@ -196,8 +196,8 @@ window.addEventListener("VisitorPageView", () => {
     async function healthCareButtonClickHandler(e) {
         e.preventDefault();
         let cookies = await window.adenty?.scookie.get();
-        if(!(cookies || [])?.find(cookie => cookie?.name === "aidp-smg_HealthCare")) {
-            let sCookieHistory = (cookies || [])?.find(cookie => cookie?.name === "aidp-history");
+        if(!(cookies || [])?.find(cookie => cookie?.name === "demoSegmentHealthCare")) {
+            let sCookieHistory = (cookies || [])?.find(cookie => cookie?.name === "demoPageHistory");
             let sCookieHistoryValue = sCookieHistory ? JSON.parse(sCookieHistory.value) : [];
             let neededSite = sCookieHistoryValue?.find((siteObject) => siteObject.site === siteName);
             
@@ -211,13 +211,13 @@ window.addEventListener("VisitorPageView", () => {
             }
             
             // Запись в localStorage
-            localStorage.setItem("titleName", "Custom healthcare software development");
+            localStorage.setItem("DemoPageTitleName", "Custom healthcare software development");
             
             neededSite.articles.push("Custom healthcare software development");
             neededSite.keywords.push("healthcare");
         
-            await window.adenty?.scookie.set({name: "aidp-history", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
-            await window.adenty?.scookie.set({name: "aidp-smg_HealthCare", value: JSON.stringify(true), scope: "SiteGroup"});
+            await window.adenty?.scookie.set({name: "demoPageHistory", value: JSON.stringify(sCookieHistoryValue), scope: "SiteGroup"});
+            await window.adenty?.scookie.set({name: "demoSegmentHealthCare", value: JSON.stringify(true), scope: "SiteGroup"});
         }
 
         window.location.href = 'https://demo.lightpointglobal.com/verticals/healthcare';
