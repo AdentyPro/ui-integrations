@@ -18,7 +18,7 @@
             cVal = null;
         }
         if(cVal && cVal.value) {
-            console.log('update demeter');
+            //console.log('update demeter');
             localStorage.demeter = cVal.value;
         }
     }
@@ -34,7 +34,7 @@
             return;
         }
         if(!isEmptyObj(obj)) {
-            console.log('set astorage');
+            //console.log('set astorage');
             adenty.astorage.set(cKey, dem).sync();
         } else {
             await restoreFromAStorage();
