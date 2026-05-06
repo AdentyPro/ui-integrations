@@ -10,15 +10,15 @@
         return sum + (Array.isArray(value) ? 0 : value);
     }
     const cKey = 'lsdem';
-    async function restoreFromSCookie() {
+    async function restoreFromAStorage() {
         let cVal;
         try {
-            cVal = await adenty.scookie.get(cKey);
+            cVal = await adenty.astorage.get(cKey);
         } catch (e) {
             cVal = null;
         }
         if(cVal && cVal.value) {
-            //console.log('update demeter');
+            console.log('update demeter');
             localStorage.demeter = cVal.value;
         }
     }
@@ -30,16 +30,16 @@
             decVal = adenty.tools.base64.decode(dem);
             obj = JSON.parse(decVal);
         } catch (e) {
-            await restoreFromSCookie();
+            await restoreFromAStorage();
             return;
         }
         if(!isEmptyObj(obj)) {
-            adenty.scookie.set({"name" : cKey, "value" : dem});
-            //console.log('set cookie');
+            console.log('set astorage');
+            adenty.astorage.set(cKey, dem).sync();
         } else {
-            await restoreFromSCookie();
+            await restoreFromAStorage();
         }
     } else {
-        await restoreFromSCookie();
+        await restoreFromAStorage();
     }
 })();
