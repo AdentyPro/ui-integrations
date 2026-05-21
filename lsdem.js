@@ -9,6 +9,22 @@
     function sumValue(sum, value) {
         return sum + (Array.isArray(value) ? 0 : value);
     }
+    const INTERNAL_AB_TEST_REGEX = /^.*INTERNAL_AB_TEST.*-V.*$/;
+    function isValidInternalAbTestValue(value) {
+        if (value == null || typeof value !== 'string') {
+            return false;
+        }
+        return INTERNAL_AB_TEST_REGEX.test(value.trim());
+    }
+    function getCookie(name) {
+        const match = document.cookie
+            .split('; ')
+            .find(row => row.startsWith(name + '='));
+        if (!match) {
+            return null;
+        }
+        return decodeURIComponent(match.slice(name.length + 1));
+    }
     const cKey = 'lsdem';
     async function restoreFromAStorage() {
         let cVal;
@@ -21,6 +37,14 @@
             //console.log('update demeter');
             localStorage.demeter = cVal.value;
         }
+    }
+    const seg = '_matheriSegs';
+    let value = await adenty.astorage.get(seg);
+    if(!value) {
+        value = getCookie(seg);
+    }
+    if(!isValidInternalAbTestValue(value)) {
+        return;
     }
     const dem = localStorage.demeter;
     if(dem) {
