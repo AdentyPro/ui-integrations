@@ -70,8 +70,7 @@ setTimeout(async () => {
     argumentsAdentyMetrics = {...cookieChangeArgs, ...argumentsAdentyMetrics};
     const ipUaChangeArgs = processIpUaChange();
     argumentsAdentyMetrics = {...ipUaChangeArgs, ...argumentsAdentyMetrics};
-    if(Object.keys(argumentsAdentyMetrics).length > 0)
-    {
+    if (Object.keys(argumentsAdentyMetrics).length > 0) {
       window.adenty.event.fireevent({
         name: 'AMetrics',
         eventarguments: JSON.stringify(argumentsAdentyMetrics),
@@ -101,10 +100,10 @@ setTimeout(async () => {
       sCookieCkPVCountVal = null;
     }
 
-    let cGUIDKey = `${cGUID}=`;
+    const cGUIDKey = `${cGUID}=`;
     const cookie = document.cookie.split(';');
-    let cookieVal = cookie.find(item => {
-      return item.indexOf(cGUIDKey) > -1
+    const cookieVal = cookie.find(item => {
+      return item.indexOf(cGUIDKey) > -1;
     });
     const ck = cookieVal ? (cookieVal.trim().substring(cGUIDKey.length) || '') : '';
 
@@ -125,7 +124,7 @@ setTimeout(async () => {
 
     if (!ck) {
       newCkPVCount = 1;
-      sCookieCkPVCountVal = (sCookieCkPVCountVal ? sCookieCkPVCountVal : 0)  //TODO check when SQL querying whether we have 0 in events, this is not expected
+      sCookieCkPVCountVal = (sCookieCkPVCountVal ? sCookieCkPVCountVal : 0);  //TODO check when SQL querying whether we have 0 in events, this is not expected
       // window.adenty.event.fireevent({
       // name: 'VisitorCookieChanged',
       // eventarguments: JSON.stringify({[ckName]: shortToken})
@@ -134,10 +133,9 @@ setTimeout(async () => {
       //     name: 'VisitorCookiePVCountChanged',
       //     eventarguments: JSON.stringify({[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken})
       //   });
-
+      result = {[ckCountName]: sCookieCkPVCountVal, [cGUID]: shortToken};
       document.cookie = `${cGUID}=${shortToken}; expires=${date.toUTCString()};`;
-    }
-    else {
+    } else {
       newCkPVCount = (sCookieCkPVCountVal ? sCookieCkPVCountVal + 1 : 1);
     }
 
@@ -181,37 +179,37 @@ setTimeout(async () => {
       sCookieIpuaPVCountVal = null;
     }
 
-    trc("scookieipUa="+ipUa)
-    trc("sCookieIpuaPVCountVal="+sCookieIpuaPVCountVal)
+    trc('scookieipUa=' + ipUa);
+    trc('sCookieIpuaPVCountVal=' + sCookieIpuaPVCountVal);
 
-    let browserData
-    let ipData
+    let browserData;
+    let ipData;
     try {
       browserData = btoa(navigator?.userAgent);
     } catch (error) {
       browserData = null;
     }
-    ipData = window.adenty?.dl?.adenty?.visit?.ipsha
+    ipData = window.adenty?.dl?.adenty?.visit?.ipsha;
     const ipUaData = JSON.stringify({
       ip: ipData,
       ua: browserData
-    })
+    });
 
-    trc("Curent ipUaData="+ipUaData)
+    trc('Curent ipUaData=' + ipUaData);
 
-    let newIpuaPVCount
+    let newIpuaPVCount;
     if (!sCookieIpuaPVCountVal || !ipUa) {
       window.adenty.astorage.set(ipUaName, ipUaData, expiresInMinutes, true, false);
       window.adenty.astorage.set(ipUaCountName, JSON.stringify(1), expiresInMinutes, true, false);
-      trc("Initing scookie")
+      trc('Initing scookie');
       return result;
     }
 
-    trc("ipChanged="+(ipUa.ip !== ipData))
-    trc("uaChanged="+(ipUa.ua !== browserData))
+    trc('ipChanged=' + (ipUa.ip !== ipData));
+    trc('uaChanged=' + (ipUa.ua !== browserData));
     if (ipUa.ip !== ipData || ipUa.ua !== browserData) {
       newIpuaPVCount = 1;
-      sCookieIpuaPVCountVal = (sCookieIpuaPVCountVal ? sCookieIpuaPVCountVal: 0) //TODO check when SQL querying whether we have 0 in events, this is not expected
+      sCookieIpuaPVCountVal = (sCookieIpuaPVCountVal ? sCookieIpuaPVCountVal : 0); //TODO check when SQL querying whether we have 0 in events, this is not expected
       // window.adenty.event.fireevent({
       // name: 'VisitorIpUaChanged',
       // eventarguments: JSON.stringify({[ipUaName]: ipUaData})
@@ -231,9 +229,8 @@ setTimeout(async () => {
         false,
         //expiresInMinutes, // TODO: make sure that here we do not set to NULL expiredate
       );
-      trc("VisitorIpUaCountChanged! "+ipUaName+"->"+ipUaData+"; "+sCookieIpuaPVCountVal+"->"+newIpuaPVCount)
-    }
-    else {
+      trc('VisitorIpUaCountChanged! ' + ipUaName + '->' + ipUaData + '; ' + sCookieIpuaPVCountVal + '->' + newIpuaPVCount);
+    } else {
       newIpuaPVCount = (sCookieIpuaPVCountVal ? sCookieIpuaPVCountVal + 1 : 1);
     }
 
@@ -246,7 +243,7 @@ setTimeout(async () => {
       //expiresInMinutes, // TODO: make sure that here we do not set to NULL expiredate
     );
 
-    trc("PVCount++ "+sCookieIpuaPVCountVal+"->"+newIpuaPVCount);
+    trc('PVCount++ ' + sCookieIpuaPVCountVal + '->' + newIpuaPVCount);
 
     return result;
   }
@@ -269,13 +266,12 @@ setTimeout(async () => {
       sCookieVidPVCountVal = null;
     }
 
-    let newVidPVCount
+    let newVidPVCount;
     if (!sCookieVidPVCountVal) {
       newVidPVCount = 1;
       window.adenty.astorage.set(vidPVCountName, JSON.stringify(newVidPVCount), expiresInMinutes, true, false);
       return;
     }
-
 
 
     newVidPVCount = (sCookieVidPVCountVal ? sCookieVidPVCountVal + 1 : 1);
@@ -288,5 +284,4 @@ setTimeout(async () => {
       //expiresInMinutes, // TODO: make sure that here we do not set to NULL expiredate
     );
   }
-
-}, 0)
+}, 0);
