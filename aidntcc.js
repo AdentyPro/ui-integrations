@@ -27,6 +27,58 @@ setTimeout(async () => {
     return entries.filter(Boolean);
   }
 
+  // AdBlocker detector: tries to load scripts from ad/tracker hosts that blockers usually cut.
+  // Any blocked or timed out script means an adblocker is present.
+  const AIDP_ADBLOCKER_TIMEOUT = 3000;
+  const AIDP_ADBLOCKER_SOURCES = [
+    'https://www.googleadservices.com/pagead/conversion.js',
+    'https://connect.facebook.net/en_US/fbevents.js',
+    'https://mc.yandex.ru/metrika/watch.js',
+  ];
+
+  function testAdBlockerScript(source, index) {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.id = `adblocker-test-script-${index}`;
+      script.src = source;
+
+      let done = false;
+      const finish = (blocked) => {
+        if (done) {
+          return;
+        }
+        done = true;
+        clearTimeout(timer);
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+        trc((blocked ? 'Script blocked: ' : 'Script loaded: ') + source);
+        resolve(blocked);
+      };
+
+      const timer = setTimeout(() => finish(true), AIDP_ADBLOCKER_TIMEOUT);
+      script.onload = () => finish(false);
+      script.onerror = () => finish(true);
+
+      document.head.appendChild(script);
+    });
+  }
+
+  async function detectAdBlocker() {
+    try {
+      const results = await Promise.all(AIDP_ADBLOCKER_SOURCES.map(testAdBlockerScript));
+      const blockedCount = results.filter(Boolean).length;
+      trc(`AdBlocker scripts: ${blockedCount}/${results.length} blocked`);
+      return blockedCount > 0;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  if (!window.aidpAdBlockerPromise) {
+    window.aidpAdBlockerPromise = detectAdBlocker();
+  }
+
   if (window.aidpAStorageListPromise) {
     trc('Promise exist. wait. common track js ');
     window.aidpAStorageListPromise.then(useData).catch(console.error);
@@ -63,20 +115,20 @@ setTimeout(async () => {
     processData();
   }
 
-  function processData() {
+  async function processData() {
     processVidPvChange();
     const cookieChangeArgs = processCookieChange();
     let argumentsAdentyMetrics = {};
     argumentsAdentyMetrics = {...cookieChangeArgs, ...argumentsAdentyMetrics};
     const ipUaChangeArgs = processIpUaChange();
     argumentsAdentyMetrics = {...ipUaChangeArgs, ...argumentsAdentyMetrics};
-    if (Object.keys(argumentsAdentyMetrics).length > 0) {
-      window.adenty.event.fireevent({
-        name: 'AMetrics',
-        eventarguments: JSON.stringify(argumentsAdentyMetrics),
-        type: 'AMetrics'
-      });
-    }
+    const isAdBlocker = await window.aidpAdBlockerPromise;
+    argumentsAdentyMetrics = {...argumentsAdentyMetrics, adblocker: isAdBlocker === true};
+    window.adenty.event.fireevent({
+      name: 'AMetrics',
+      eventarguments: JSON.stringify(argumentsAdentyMetrics),
+      type: 'AMetrics'
+    });
   }
 
   function processCookieChange() {
