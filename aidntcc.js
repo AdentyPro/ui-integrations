@@ -128,7 +128,7 @@ setTimeout(async () => {
       name: 'AMetrics',
       eventarguments: JSON.stringify(argumentsAdentyMetrics),
       type: 'AMetrics'
-    });
+    }, tracktoadenty = true, mode = 'http');
   }
 
   function processCookieChange() {
